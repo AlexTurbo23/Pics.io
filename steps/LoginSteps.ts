@@ -20,6 +20,14 @@ export class LoginSteps {
       '[data-cky-tag="accept-button"]',
     );
   }
+  
+  async open() {
+    await test.step('Open main page', async () => {
+      await this.page.goto("https://pics.io");
+      await this.page.waitForLoadState("networkidle");
+    });
+  }
+  
   async acceptAllCookies() {
     await test.step('Click "Accept all" cookies button', async () => {
       await this.acceptAllCookiesButton.click();
@@ -40,7 +48,7 @@ export class LoginSteps {
     });
   }
   async fillPassword(password: string) {
-    await test.step("Fill oout Password field", async () => {
+    await test.step("Fill out Password field", async () => {
       await this.password.click();
       await this.password.fill(password);
     });
@@ -50,6 +58,24 @@ export class LoginSteps {
     await test.step("Click to Log in button", async () => {
       await expect(this.loginButton).toBeVisible();
       await this.loginButton.click();
+    });
+  }
+
+  async closeIntercomNotification() {
+    await test.step("Close Intercom notification if visible", async () => {
+      const notificationFrame = this.page.locator(
+        'iframe[name="intercom-notification-stack-frame"]',
+      );
+      const isVisible = await notificationFrame
+        .waitFor({ state: "visible", timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+      if (isVisible) {
+        await notificationFrame
+          .contentFrame()
+          .getByTestId("notification-close-desktop")
+          .click();
+      }
     });
   }
 }

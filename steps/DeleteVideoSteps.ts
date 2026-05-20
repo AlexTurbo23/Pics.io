@@ -2,16 +2,12 @@ import { expect, Locator, Page, test } from "@playwright/test";
 
 export class DeleteVideoSteps {
   private readonly page: Page;
-  private readonly videoCheckbox: Locator;
   private readonly deleteButton: Locator;
   private readonly deleteConfirmButton: Locator;
   private readonly deleteDialog: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.videoCheckbox = page.locator(
-      ".catalogItem.isVideo .catalogItem__checkbox",
-    );
     this.deleteButton = page.locator('[data-testid="assetsDelete"]');
     this.deleteConfirmButton = page
       .locator(".simpleDialogBox")
@@ -21,22 +17,47 @@ export class DeleteVideoSteps {
 
   private getVideoCheckboxByName(fileName: string): Locator {
     return this.page.locator(
-      `.catalogItem.isVideo:has-text("${fileName}") .catalogItem__checkbox`,
+      `.catalogItem:has-text("${fileName}") .catalogItem__checkbox`,
     );
+  }
+
+  async deleteVideoIfExists(fileName: string) {
+    await test.step(`Cleanup: delete "${fileName}" if exists`, async () => {
+      await this.page.goto("https://pics.io/search");
+      await this.page.waitForURL("**/search**", { timeout: 30000 });
+      const videoItem = this.page.locator(
+        `.catalogItem:has-text("${fileName}")`,
+      );
+      const exists = await videoItem
+        .waitFor({ state: "visible", timeout: 10000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!exists) return;
+      await videoItem.hover();
+      await videoItem.locator(".catalogItem__checkbox").click();
+      await expect(this.deleteButton).toBeVisible({ timeout: 5000 });
+      await this.deleteButton.click();
+      await expect(this.deleteDialog).toBeVisible({ timeout: 5000 });
+      await this.deleteConfirmButton.click();
+      await expect(this.deleteDialog).toBeHidden({ timeout: 10000 });
+    });
   }
 
   async deleteVideo(fileName: string) {
     await test.step(`Delete video asset: ${fileName}`, async () => {
-      await test.step("Wait for catalog page to load", async () => {
+      await test.step("Navigate to search page", async () => {
+        await this.page.goto("https://pics.io/search");
         await this.page.waitForURL("**/search**", { timeout: 30000 });
-        await this.page.waitForSelector(".catalogItem.isVideo", {
-          timeout: 30000,
-        });
+        await this.page
+          .locator(`.catalogItem:has-text("${fileName}")`)
+          .waitFor({ state: "visible", timeout: 30000 });
       });
 
       await test.step("Select video asset", async () => {
+        const item = this.page.locator(`.catalogItem:has-text("${fileName}")`);
+        await item.hover();
         const checkbox = this.getVideoCheckboxByName(fileName);
-        await expect(checkbox).toBeVisible({ timeout: 10000 });
+        await expect(checkbox).toBeVisible({ timeout: 5000 });
         await checkbox.click();
       });
 

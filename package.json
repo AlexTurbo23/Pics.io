@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
-    "test:line": "npx playwright test --reporter=line",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "test:grep": "npx playwright test --grep",
+    "codegen": "npx playwright codegen https://pics.io",
+    "trace": "npx playwright show-trace",
     "report:html": "npx playwright show-report",
     "report:allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
     "lint": "eslint .",

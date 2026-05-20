@@ -14,6 +14,8 @@ export class CheckVideoSteps {
   }
   async verifyVideoIsUploaded(filename: string) {
     await test.step("Checking uploaded video is exist during generating thumbnails", async () => {
+      await this.page.goto("https://pics.io/search");
+      await this.page.waitForURL("**/search**", { timeout: 30000 });
       await expect(this.generatingThumbnailsText).toBeVisible({
         timeout: 30000,
       });

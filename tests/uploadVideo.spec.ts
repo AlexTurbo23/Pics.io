@@ -12,12 +12,14 @@ test.beforeEach(async ({ page }, testInfo) => {
   const loginSteps = new LoginSteps(page);
   console.log(`Running ${testInfo.title}`);
 
-  await page.goto("https://pics.io");
-  await loginSteps.openLoginWindow();
+  await loginSteps.open();
   await loginSteps.acceptAllCookies();
+  await loginSteps.openLoginWindow();
   await loginSteps.fillEmail(process.env.TEST_USER_EMAIL!);
   await loginSteps.fillPassword(process.env.TEST_USER_PASSWORD!);
   await loginSteps.logIn();
+  await loginSteps.closeIntercomNotification();
+
 });
 
 test("Check uploading video", async ({ page }) => {
