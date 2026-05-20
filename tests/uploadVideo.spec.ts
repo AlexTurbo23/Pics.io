@@ -6,6 +6,8 @@ import { DeleteVideoSteps } from "../steps/DeleteVideoSteps";
 
 const videoNAME = "video.mp4";
 
+test.describe.configure({ mode: "serial" });
+
 test.beforeEach(async ({ page }, testInfo) => {
   const loginSteps = new LoginSteps(page);
   console.log(`Running ${testInfo.title}`);

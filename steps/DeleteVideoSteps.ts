@@ -19,6 +19,12 @@ export class DeleteVideoSteps {
     this.deleteDialog = page.locator(".simpleDialogBox");
   }
 
+  private getVideoCheckboxByName(fileName: string): Locator {
+    return this.page.locator(
+      `.catalogItem.isVideo:has-text("${fileName}") .catalogItem__checkbox`,
+    );
+  }
+
   async deleteVideo(fileName: string) {
     await test.step(`Delete video asset: ${fileName}`, async () => {
       await test.step("Wait for catalog page to load", async () => {
@@ -29,10 +35,9 @@ export class DeleteVideoSteps {
       });
 
       await test.step("Select video asset", async () => {
-        await expect(this.videoCheckbox.first()).toBeVisible({
-          timeout: 10000,
-        });
-        await this.videoCheckbox.first().click();
+        const checkbox = this.getVideoCheckboxByName(fileName);
+        await expect(checkbox).toBeVisible({ timeout: 10000 });
+        await checkbox.click();
       });
 
       await test.step("Click Delete button in toolbar", async () => {
