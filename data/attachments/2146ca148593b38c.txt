@@ -1,0 +1,7 @@
+Running Check uploading video
+[UploadVideoSteps] Dialog appeared: "Select collection to import"
+[UploadVideoSteps] Selecting collection and clicking Import
+[UploadVideoSteps] Collection dialog closed
+[UploadVideoSteps] No dialog appeared within timeout
+[UploadVideoSteps] Waiting for import panel...
+[UploadVideoSteps] Import panel is visible
