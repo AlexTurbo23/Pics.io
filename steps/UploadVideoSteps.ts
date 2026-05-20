@@ -50,23 +50,28 @@ export class UploadVideoSteps {
       const selectCollectionDialog = this.page
         .locator(".simpleDialogBox")
         .filter({ hasText: "Select collection to import" });
-      if (
-        await selectCollectionDialog
-          .isVisible({ timeout: 5000 })
-          .catch(() => false)
-      ) {
+
+      const isCollectionDialogVisible = await selectCollectionDialog
+        .waitFor({ state: "visible", timeout: 8000 })
+        .then(() => true)
+        .catch(() => false);
+
+      if (isCollectionDialogVisible) {
         await this.page.locator(".dropdownTreeItemName").first().click();
         await selectCollectionDialog
           .locator("button.PicsioButton--color--primary")
           .click();
-      } else if (
-        await this.assetAlreadyExistText
-          .isVisible({ timeout: 3000 })
-          .catch(() => false)
-      ) {
-        await this.page.locator('button:has-text("Ok")').click();
+      } else {
+        const isAlreadyExistsVisible = await this.assetAlreadyExistText
+          .waitFor({ state: "visible", timeout: 5000 })
+          .then(() => true)
+          .catch(() => false);
+        if (isAlreadyExistsVisible) {
+          await this.page.locator('button:has-text("Ok")').click();
+        }
       }
-      await expect(this.importItemCell).toBeVisible();
+
+      await expect(this.importItemCell).toBeVisible({ timeout: 15000 });
     });
   }
 
