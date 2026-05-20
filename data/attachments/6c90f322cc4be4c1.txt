@@ -1,0 +1,1 @@
+Running Video player loads when opening a video asset
