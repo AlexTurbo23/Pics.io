@@ -5,16 +5,16 @@ dotenv.config();
 
 export default defineConfig({
   testDir: "./tests",
-  timeout: 240 * 1000,
+  timeout: 120 * 1000,
 
   expect: {
     timeout: 5000,
   },
 
-  fullyParallel: !process.env.CI,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  retries: process.env.CI ? 1 : 0,
+  workers: 1,
 
   reporter: [
     ["html", { open: "never" }],
@@ -26,9 +26,9 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || "https://pics.io",
     headless: !!process.env.CI,
 
-    actionTimeout: 0,
+    actionTimeout: 30_000,
     screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    video: process.env.CI ? "off" : "retain-on-failure",
     trace: "on-first-retry",
   },
 
@@ -38,9 +38,9 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         launchOptions: {
-          args: ["--start-maximized"],
+          args: process.env.CI ? [] : ["--start-maximized"],
         },
-        viewport: null,
+        viewport: process.env.CI ? { width: 1920, height: 1080 } : null,
         deviceScaleFactor: undefined,
       },
     },

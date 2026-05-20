@@ -53,6 +53,10 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - name: Remove large files from Allure report
+        if: always()
+        run: find allure-report -size +50M -delete 2>/dev/null || true
+
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()

@@ -20,17 +20,23 @@ export class LoginSteps {
       '[data-cky-tag="accept-button"]',
     );
   }
-  
+
   async open() {
-    await test.step('Open main page', async () => {
+    await test.step("Open main page", async () => {
       await this.page.goto("https://pics.io");
       await this.page.waitForLoadState("networkidle");
     });
   }
-  
+
   async acceptAllCookies() {
     await test.step('Click "Accept all" cookies button', async () => {
-      await this.acceptAllCookiesButton.click();
+      const isVisible = await this.acceptAllCookiesButton
+        .waitFor({ state: "visible", timeout: 10000 })
+        .then(() => true)
+        .catch(() => false);
+      if (isVisible) {
+        await this.acceptAllCookiesButton.click();
+      }
     });
   }
 
