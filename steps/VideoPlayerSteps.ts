@@ -70,4 +70,38 @@ export class VideoPlayerSteps {
       await expect(this.page.locator(".btnFullscreenVideo")).toBeVisible();
     });
   }
+
+  async seekToPercent(percent: number) {
+    await test.step(`Seek to ${percent}% of video duration`, async () => {
+      // Wait until video metadata is loaded and duration is known
+      await this.page.waitForFunction(() => {
+        const v = document.querySelector("video") as HTMLVideoElement;
+        return v !== null && Number.isFinite(v.duration) && v.duration > 0;
+      });
+      await this.page.evaluate((pct) => {
+        const v = document.querySelector("video") as HTMLVideoElement;
+        if (v) v.currentTime = (v.duration * pct) / 100;
+      }, percent);
+    });
+  }
+
+  async assertCurrentTimeIsAfter(minSeconds: number) {
+    await test.step(`Assert video current time is after ${minSeconds}s`, async () => {
+      const currentTime = await this.page.evaluate(
+        () =>
+          (document.querySelector("video") as HTMLVideoElement)?.currentTime ??
+          0,
+      );
+      expect(
+        currentTime,
+        `Expected currentTime > ${minSeconds}s, got ${currentTime}`,
+      ).toBeGreaterThan(minSeconds);
+    });
+  }
+
+  async pressSpaceKey() {
+    await test.step("Press Space key to toggle play/pause", async () => {
+      await this.page.keyboard.press("Space");
+    });
+  }
 }

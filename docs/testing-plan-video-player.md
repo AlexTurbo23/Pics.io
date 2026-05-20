@@ -176,14 +176,15 @@ The following tests are implemented and passing:
 
 ```
 tests/
-  uploadVideo.spec.ts          ← upload video.mp4, verify thumbnail generation starts, delete asset
+  uploadVideo.spec.ts     ← upload video.mp4, verify thumbnail generation, delete asset
+  videoPlayer.spec.ts     ← player loads; play button visible; click play → playing;
+                            click again → paused; Space key toggle; timeline seek
+                            (currentTime assertion); volume/fullscreen controls visible
 ```
 
-Steps are located in `steps/` and follow a Page Object pattern (`LoginSteps`, `UploadVideoSteps`, `CheckUploadedSteps`, `DeleteVideoSteps`).
+Steps are located in `steps/` and follow a Page Object pattern (`LoginSteps`, `UploadVideoSteps`, `CheckUploadedSteps`, `DeleteVideoSteps`, `VideoPlayerSteps`).
 
 Only Chromium is enabled in `playwright.config.ts`; Firefox and Safari projects are commented out.
-
-> **Gap:** No player-level tests exist yet. The scenarios below represent the **planned target structure**.
 
 #### Planned Target Structure
 

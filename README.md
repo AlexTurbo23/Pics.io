@@ -48,7 +48,7 @@ npx playwright install chromium
 
 ### Configure credentials
 
-Create a `.env.test` file in the project root (do **not** commit it):
+Create a `.env` file in the project root (do **not** commit it):
 
 ```env
 TEST_USER_EMAIL=your@email.com
@@ -114,6 +114,8 @@ Key rules enforced:
 | Play button visible, video initially paused | `tests/videoPlayer.spec.ts` | ✅ Done |
 | Click play → video starts playing           | `tests/videoPlayer.spec.ts` | ✅ Done |
 | Click play again → video pauses             | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Space key toggles play/pause                | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Seeking sets new playback position          | `tests/videoPlayer.spec.ts` | ✅ Done |
 | Volume and fullscreen controls visible      | `tests/videoPlayer.spec.ts` | ✅ Done |
 
 ---

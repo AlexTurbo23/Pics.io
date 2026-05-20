@@ -59,4 +59,23 @@ test.describe("Video Player", () => {
     await playerSteps.assertVolumeButtonVisible();
     await playerSteps.assertFullscreenButtonVisible();
   });
+
+  test("Space key toggles play/pause", async ({ page }) => {
+    const playerSteps = new VideoPlayerSteps(page);
+
+    await playerSteps.openFirstVideoAsset();
+    await playerSteps.clickPlay();
+    await playerSteps.assertVideoIsPlaying();
+    await playerSteps.pressSpaceKey();
+    await playerSteps.assertVideoIsPaused();
+  });
+
+  test("Seeking changes the playback position", async ({ page }) => {
+    const playerSteps = new VideoPlayerSteps(page);
+
+    await playerSteps.openFirstVideoAsset();
+    await playerSteps.assertPlayerLoaded();
+    await playerSteps.seekToPercent(50);
+    await playerSteps.assertCurrentTimeIsAfter(0);
+  });
 });
