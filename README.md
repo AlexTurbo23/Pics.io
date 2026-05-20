@@ -16,12 +16,14 @@
 
 ```
 ├── tests/
-│   └── uploadVideo.spec.ts       # Upload and delete video asset
+│   ├── uploadVideo.spec.ts        # Upload and delete video asset
+│   └── videoPlayer.spec.ts        # Video player controls
 ├── steps/
-│   ├── LoginSteps.ts             # Authentication actions
-│   ├── UploadVideoSteps.ts       # Upload flow actions
-│   ├── CheckUploadedSteps.ts     # Post-upload verification
-│   └── DeleteVideoSteps.ts       # Asset deletion actions
+│   ├── LoginSteps.ts              # Authentication actions
+│   ├── UploadVideoSteps.ts        # Upload flow actions
+│   ├── CheckUploadedSteps.ts      # Post-upload verification
+│   ├── DeleteVideoSteps.ts        # Asset deletion actions
+│   └── VideoPlayerSteps.ts        # Video player actions
 ├── docs/
 │   └── testing-plan-video-player.md
 └── playwright.config.ts
@@ -104,7 +106,26 @@ Key rules enforced:
 
 ## ✅ Implemented Tests
 
-| Test               | File                        | Status  |
-| ------------------ | --------------------------- | ------- |
-| Upload video asset | `tests/uploadVideo.spec.ts` | ✅ Done |
-| Delete video asset | `tests/uploadVideo.spec.ts` | ✅ Done |
+| Test                                        | File                        | Status  |
+| ------------------------------------------- | --------------------------- | ------- |
+| Upload video asset                          | `tests/uploadVideo.spec.ts` | ✅ Done |
+| Delete video asset                          | `tests/uploadVideo.spec.ts` | ✅ Done |
+| Video player loads for video asset          | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Play button visible, video initially paused | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Click play → video starts playing           | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Click play again → video pauses             | `tests/videoPlayer.spec.ts` | ✅ Done |
+| Volume and fullscreen controls visible      | `tests/videoPlayer.spec.ts` | ✅ Done |
+
+---
+
+## 🤖 AI Tools Used
+
+**GitHub Copilot** was used throughout the project in the following areas:
+
+| Area                      | How it helped                                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Test plan structure**   | Generated the initial skeleton for `docs/testing-plan-video-player.md` — sections, priority tables, and edge case lists — which were then reviewed and refined manually                   |
+| **Locator strategy**      | Suggested CSS and ARIA-based selectors (`getByRole`, `data-popup-opener`, `.simpleDialogBox`) during live inspection of the Pics.io DOM; reduced trial-and-error in headless mode         |
+| **Debugging dialog flow** | Identified the double-dialog sequence (collection picker → asset-exists) by analysing Playwright trace output and suggesting the two-step `detectDialog` pattern in `UploadVideoSteps.ts` |
+| **CI configuration**      | Proposed fixes for the headless viewport issue (`viewport: null` → `1920×1080`), `retries`, `actionTimeout`, and the large-file cleanup step in the GitHub Actions workflow               |
+| **Code review**           | Flagged `acceptAllCookies` as a hard failure point when the cookie banner is absent, and suggested the `waitFor + catch` guard pattern                                                    |
